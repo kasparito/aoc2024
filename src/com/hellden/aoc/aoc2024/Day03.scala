@@ -1,5 +1,7 @@
 package com.hellden.aoc.aoc2024
 
+import scala.language.experimental.namedTuples
+
 object Day03 extends Day(3):
 
   private val Do = """do\(\)""".r
@@ -16,9 +18,9 @@ object Day03 extends Day(3):
       .sum
 
   override def part2: Long = // 85508223
-    val (sum, _) = Instruction
+    Instruction
       .findAllIn(input)
-      .foldLeft (0L, true):
+      .foldLeft((sum = 0L, enabled = true)):
         case ((sum, _), Do()) =>
           (sum, true)
         case ((sum, _), Dont()) =>
@@ -27,4 +29,4 @@ object Day03 extends Day(3):
           (sum + a.toLong * b.toLong, enabled)
         case (result, _) =>
           result
-    sum
+      .sum
