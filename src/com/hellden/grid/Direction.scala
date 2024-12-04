@@ -1,5 +1,13 @@
 package com.hellden.grid
 
+object Direction:
+
+  enum Diagonal(direction: Direction):
+    case Criss extends Diagonal(NE)
+    case Cross extends Diagonal(SE)
+    
+    val directions: Set[Direction] = Set(direction, direction.opposite)
+
 enum Direction(val dx: Int, val dy: Int):
   case N extends Direction(0, -1)
   case E extends Direction(1, 0)

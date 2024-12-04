@@ -6,33 +6,37 @@ object Grid:
 
 class Grid[T](grid: IndexedSeq[IndexedSeq[T]]):
 
-  val horizontalBounds: Range = 0 until grid.map(_.length).max
-  val verticalBounds: Range = grid.indices
+  case class Cell(position: Position, value: T):
 
-  def positions: Iterable[Position] =
+    def move(direction: Direction, steps: Int = 1): Option[Cell] =
+      at(position.move(direction, steps))
+
+    def valuesIn(direction: Direction, offset: Int = 0): LazyList[T] =
+      valuesFrom(position, direction, offset)
+
+  val rows: IndexedSeq[IndexedSeq[Cell]] =
+    grid.zipWithIndex.map: (row, y) =>
+      row.zipWithIndex.map: (value, x) =>
+        Cell(Position(x, y), value)
+
+  def cells: Iterable[Cell] = rows.view.flatten
+
+  def at(position: Position): Option[Cell] =
     for
-      x <- horizontalBounds: Iterable[Int]
-      y <- verticalBounds: Iterable[Int]
-    yield Position(x, y)
+      row <- rows.lift(position.y)
+      value <- row.lift(position.x)
+    yield value
 
-  def isWithinBounds(x: Int, y: Int): Boolean =
-    horizontalBounds.contains(x) && verticalBounds.contains(y)
+  def valuesFrom(position: Position, direction: Direction, offset: Int = 0): LazyList[T] =
+    LazyList
+      .from(offset)
+      .map: steps =>
+        position.move(direction, steps)
+      .map(at)
+      .takeWhile(_.isDefined)
+      .collect:
+        case Some(cell) =>
+          cell.value
 
-  def move(position: Position, direction: Direction, steps: Int = 1): Option[(Position, T)] =
-    val p = position.move(direction, steps)
-    at(p).map((p, _))
-
-  def at(position: Position): Option[T] =
-    Option.when(isWithinBounds(position.x, position.y)):
-      grid(position.y)(position.x)
-
-  def at(position: Position, direction: Direction, steps: Int = 1): Option[T] =
-    at(position.move(direction, steps))
-
-  def find(v: T): Iterable[Position] =
-    for
-      position <- positions
-      value <- at(position)
-      if value == v
-    yield
-      position
+  def find(value: T): Iterable[Cell] =
+    cells.filter(_.value == value)
