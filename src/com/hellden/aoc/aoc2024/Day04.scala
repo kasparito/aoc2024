@@ -1,7 +1,7 @@
 package com.hellden.aoc.aoc2024
 
 import com.hellden.grid.Direction.*
-import com.hellden.grid.{Direction, Grid, Position}
+import com.hellden.grid.{Direction, Grid}
 
 import scala.language.experimental.namedTuples
 
