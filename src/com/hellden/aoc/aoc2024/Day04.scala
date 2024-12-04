@@ -12,13 +12,10 @@ object Day04 extends Day(4):
   override def part1: Long = // 2464
     grid
       .positions
-      .map: position =>
-        Direction.values.count: direction =>
-          "XMAS"
-            .zipWithIndex
-            .forall: (char, index) =>
-              grid.valueFor(position.move(direction, index)).contains(char)
-      .sum
+      .zip(Direction.values)
+      .count: (position, direction) =>
+        "XMAS".zipWithIndex.forall: (char, index) =>
+          grid.valueFor(position.move(direction, index)).contains(char)
 
   override def part2: Long = // 1982
     grid
