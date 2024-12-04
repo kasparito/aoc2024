@@ -15,13 +15,13 @@ object Day04 extends Day(4):
       .zip(Direction.values)
       .count: (position, direction) =>
         "XMAS".zipWithIndex.forall: (char, index) =>
-          grid.valueFor(position.move(direction, index)).contains(char)
+          grid.at(position, direction, index).contains(char)
 
   override def part2: Long = // 1982
     grid
       .find('A')
       .count: position =>
-        def check(d: Direction): Boolean =
-          grid.valueFor(position.move(d)).contains('M') &&
-          grid.valueFor(position.move(d.opposite)).contains('S')
+        def check(direction: Direction): Boolean =
+          grid.at(position, direction).contains('M') &&
+          grid.at(position, direction.opposite).contains('S')
         (check(NW) || check(SE)) && (check(NE) || check(SW))
