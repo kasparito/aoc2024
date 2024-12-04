@@ -26,7 +26,7 @@ class Grid[T](grid: IndexedSeq[IndexedSeq[T]]):
     Option.when(isWithinBounds(position.x, position.y)):
       grid(position.y)(position.x)
 
-  def at(position: Position, direction: Direction, steps: Int = 0): Option[T] =
+  def at(position: Position, direction: Direction, steps: Int = 1): Option[T] =
     at(position.move(direction, steps))
 
   def find(v: T): Iterable[Position] =
