@@ -17,9 +17,7 @@ object Day05 extends Day(5):
         val Seq(p1, p2) = line.split('|').map(_.toLong).toSeq
         (p1, p2)
       .toSet
-    val reverseRules = rules.map((p1, p2) => (p2, p1))
-    val ordering = Ordering.fromLessThan[Long]: (p1, p2) =>
-      rules(p1, p2) && reverseRules(p2, p1)
+    val ordering = Ordering.fromLessThan[Long](rules (_, _))
 
     (ordering, lineIterator.map(_.split(',').map(_.toLong).toList).toSeq)
 
