@@ -42,6 +42,6 @@ object Day06 extends Day(6):
   override def part1: Int = // 5067
     initial.visitedCells.size
 
-  override def part2: Long = // ???
+  override def part2: Long = // 1793
     initial.visitedCells.filterNot(_.value == '^').count: obstacleCell =>
       countVisitedCells(Some(obstacleCell)).loop
