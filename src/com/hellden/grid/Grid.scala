@@ -17,10 +17,16 @@ class Grid[T](values: (Int, Int) => Option[T]):
   case class Cell(position: Position, value: T):
 
     def move(direction: Direction, steps: Int = 1): Option[Cell] =
-      cellAt(position.move(direction, steps))
+      cellAt(position.moveIn(direction, steps))
+
+    def move(dx: Int, dy: Int): Option[Cell] =
+      cellAt(position.move(dx, dy))
 
     def cellsIn(direction: Direction, offset: Int = 0): LazyList[Cell] =
       cellsFrom(position, direction, offset)
+
+    def cellsInDirection(dx: Int, dy: Int): LazyList[Cell] =
+      cellsFrom(position, dx: Int, dy: Int)
 
     def valuesIn(direction: Direction, offset: Int = 0): LazyList[T] =
       cellsIn(direction, offset).map(_.value)
@@ -32,7 +38,10 @@ class Grid[T](values: (Int, Int) => Option[T]):
     cellMap(position)
 
   def cellsFrom(position: Position, direction: Direction, offset: Int = 0): LazyList[Cell] =
-    LazyList.from(offset).map(position.move(direction, _)).map(cellAt).takeWhile(_.isDefined).flatten
+    LazyList.from(offset).map(position.moveIn(direction, _)).map(cellAt).takeWhile(_.isDefined).flatten
+
+  def cellsFrom(position: Position, dx: Int, dy: Int): LazyList[Cell] =
+    LazyList.from(0).map(position.move(dx, dy, _)).map(cellAt).takeWhile(_.isDefined).flatten
 
 class BoundedGrid[T](horisontalBounds: Range, verticalBounds: Range)(values: (Int, Int) => Option[T])
   extends Grid[T](values):

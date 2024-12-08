@@ -38,4 +38,4 @@ enum Direction(val dx: Int, val dy: Int):
     Direction.fromOrdinal((ordinal + to.sign * steps) % Direction.values.length)
 
   def move(position: Position, steps: Int = 1): Position =
-    position.move(this, steps)
+    position.moveIn(this, steps)
