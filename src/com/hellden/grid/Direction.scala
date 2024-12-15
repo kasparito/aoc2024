@@ -4,6 +4,8 @@ import com.hellden.grid.Direction.Turn
 
 object Direction:
 
+  val NESW: List[Direction] = List(N, E, S, W)
+  
   enum Diagonal(direction: Direction):
     case Criss extends Diagonal(NE)
     case Cross extends Diagonal(SE)

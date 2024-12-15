@@ -9,8 +9,6 @@ object Day10 extends Day(10):
   private val map = Grid(inputLines)
   import map.Cell
 
-  private val directions = Direction.values.filter(_.ordinal % 2 == 0)
-
   @tailrec
   private def reachable(cells: List[Cell], reached: List[Position] = Nil): List[Position] =
     cells match
@@ -19,7 +17,8 @@ object Day10 extends Day(10):
       case Cell(position, '9') :: tail =>
         reachable(tail, position :: reached)
       case cell :: tail =>
-        reachable(directions.flatMap(cell.move(_)).filter(_.value == cell.value + 1).toList ::: tail, reached)
+        val nextCells = Direction.NESW.flatMap(cell.move(_)).filter(_.value == cell.value + 1)
+        reachable(nextCells ::: tail, reached)
 
   private val trailHeads = map.find('0').toList
 
