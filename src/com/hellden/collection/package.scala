@@ -15,3 +15,7 @@ package object collection:
         throw new NoSuchElementException(s"middle of even sized (${s.length}) sequence")
       else
         s(s.length / 2)
+
+  extension [K, V](pairs: Iterable[(K, V)])
+    def groupKeyValue: Map[K, Iterable[V]] =
+      pairs.groupBy(_._1).view.mapValues(_.map(_._2)).toMap
