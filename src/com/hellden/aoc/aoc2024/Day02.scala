@@ -11,7 +11,7 @@ object Day02 extends Day(2):
   private def countSafeReports(tolerance: Int): Int =
     inputLines
       .map: line =>
-        line.split(" ").map(_.toInt)
+        line.split(" ").toIndexedSeq.map(_.toInt)
       .count: report =>
         val ok = math.min(errors(report), errors(report.reverse)) <= tolerance
         report.toList match

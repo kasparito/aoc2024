@@ -34,7 +34,7 @@ private abstract class Day(day: Int) {
     content
   }
 
-  lazy val inputLines: Seq[String] = input.split('\n')
+  lazy val inputLines: IndexedSeq[String] = input.split('\n').toIndexedSeq
 
   def part1: Any = "TBD"
 

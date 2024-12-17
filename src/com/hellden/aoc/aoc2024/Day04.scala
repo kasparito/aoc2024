@@ -9,7 +9,7 @@ object Day04 extends Day(4):
   private val grid = Grid(inputLines)
 
   override def part1: Long = // 2464
-    grid.cells.cross(Direction.values).count: (cell, direction) =>
+    grid.cells.cross(Direction.values.toIndexedSeq).count: (cell, direction) =>
       cell.valuesIn(direction).startsWith("XMAS")
 
   override def part2: Long = // 1982

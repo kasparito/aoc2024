@@ -22,12 +22,12 @@ object Day09 extends Day(9):
   @tailrec
   private def checksum(blocks: Vector[Block], position: BigInt = 0, acc: BigInt = 0): BigInt =
     blocks match
-      case Vector() =>
-        acc
       case File(id, _, size) +: tail =>
         checksum(tail, position + size, acc + id * (size * position + size * (size - 1) / 2))
       case head +: tail =>
         checksum(tail, position + head.size, acc)
+      case _ =>
+        acc
 
   private def mkString(blocks: Iterable[Block]): String = blocks
     .map:
