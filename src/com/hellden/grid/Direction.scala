@@ -37,7 +37,7 @@ enum Direction(val dx: Int, val dy: Int):
     case SW => NE
 
   def turn(to: Turn, steps: Int = 2): Direction =
-    Direction.fromOrdinal((ordinal + to.sign * steps) % Direction.values.length)
+    Direction.fromOrdinal((Direction.values.length + ordinal + to.sign * steps) % Direction.values.length)
 
   def move(position: Position, steps: Int = 1): Position =
     position.moveIn(this, steps)

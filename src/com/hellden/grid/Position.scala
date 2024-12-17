@@ -7,6 +7,9 @@ case class Position(x: Int, y: Int):
 
   def move(dx: Int, dy: Int, steps: Int = 1): Position =
     Position(x + steps * dx, y + steps * dy)
+    
+  def manhattanDistance(position: Position): Int =
+    (position.x - x).abs + (position.y - y).abs
 
 object Position:
   given Ordering[Position] = Ordering.by(p => (p.x, p.y))
