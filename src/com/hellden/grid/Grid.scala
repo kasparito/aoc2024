@@ -43,7 +43,7 @@ class Grid[T](values: (Int, Int) => Option[T]):
   def cellsFrom(position: Position, dx: Int, dy: Int): LazyList[Cell] =
     LazyList.from(0).map(position.move(dx, dy, _)).map(cellAt).takeWhile(_.isDefined).flatten
 
-class BoundedGrid[T](horisontalBounds: Range, verticalBounds: Range)(values: (Int, Int) => Option[T])
+class BoundedGrid[T](val horisontalBounds: Range, val verticalBounds: Range)(values: (Int, Int) => Option[T])
   extends Grid[T](values):
 
   def rows: IndexedSeq[Iterable[Cell]] = verticalBounds.map: y =>

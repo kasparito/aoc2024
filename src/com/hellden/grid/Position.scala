@@ -1,5 +1,7 @@
 package com.hellden.grid
 
+import scala.util.Try
+
 case class Position(x: Int, y: Int):
 
   def moveIn(d: Direction, steps: Int = 1): Position =
@@ -12,4 +14,10 @@ case class Position(x: Int, y: Int):
     (position.x - x).abs + (position.y - y).abs
 
 object Position:
+
   given Ordering[Position] = Ordering.by(p => (p.x, p.y))
+
+  def parse(s: String): Position =
+    Try(s.split(",")).toOption match
+      case Some(Array(x, y)) => Position(x.toInt, y.toInt)
+      case _ => throw new IllegalArgumentException(s)
