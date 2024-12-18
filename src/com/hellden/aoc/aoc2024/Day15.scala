@@ -92,5 +92,5 @@ object Day15 extends Day(15):
   override def part1: Num = // 1415498
     new Warehouse(1).run
 
-  override def part2: Num = // ???
+  override def part2: Num = // 1432898
     new Warehouse(2).run

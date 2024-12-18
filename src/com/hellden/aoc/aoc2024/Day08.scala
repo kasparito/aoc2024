@@ -27,7 +27,7 @@ object Day08 extends Day(8):
       val dy = cell1.position.y - cell2.position.y
       (cell1.move(dx, dy).toList ::: cell2.move(-dx, -dy).toList).map(_.position)
 
-  override def part2: Long = // ???
+  override def part2: Long = // 1359
     countAntinodePositions: (cell1, cell2) =>
       val dx = cell1.position.x - cell2.position.x
       val dy = cell1.position.y - cell2.position.y
