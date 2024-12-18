@@ -1,10 +1,12 @@
 package com.hellden.grid
 
+import com.hellden.cache.ObjectIdentityKey
 import com.hellden.grid.Direction.*
 import com.hellden.grid.Direction.Turn.*
 
 import java.util.concurrent.LinkedTransferQueue
 import scala.annotation.tailrec
+import scala.collection.concurrent.TrieMap
 import scala.collection.{SortedSet, mutable}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -51,7 +53,9 @@ class PathFinder[T](grid: BoundedGrid[T]):
   private class PriorityQueue(direction: Direction, start: Position, finish: Position):
 
     private val startPath: Path = Path(start, direction, List((start, direction)), 0)
-    private val queue = mutable.PriorityQueue(startPath)(Ordering.by(heuristicScore))
+    private val queue = mutable.PriorityQueue(startPath):
+      val cache = TrieMap.empty[ObjectIdentityKey, Num]
+      Ordering.by(path => cache.getOrElseUpdate(new ObjectIdentityKey(path), heuristicScore(path)))
     private val bestPaths = mutable.Map(key(startPath) -> startPath)
 
     private def enqueue(
