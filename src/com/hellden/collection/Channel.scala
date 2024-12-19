@@ -43,6 +43,6 @@ object Channel:
     def iterable: Iterable[T]
     final def head: T = take(1).head
     final def take(n: Int): Iterable[T] =
-      val values = iterable.take(n).toSeq
+      val values = iterable.take(n).toVector
       cancel()
       values

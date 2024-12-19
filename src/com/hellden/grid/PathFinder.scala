@@ -91,10 +91,10 @@ class PathFinder[T](grid: BoundedGrid[T]):
     private def find(bestScore: Num, solutions: Producer[Solution]): Unit =
       if queue.isEmpty then
         solutions.done()
-      else
+      else if solutions.active then
         dequeue() match
           case path if path.position == finish =>
-            if consider(path.score, bestScore) then 
+            if consider(path.score, bestScore) then
               solutions.publish(path.toSolution)
             find(bestScore.min(path.score), solutions)
           case path if done(path.position) =>
