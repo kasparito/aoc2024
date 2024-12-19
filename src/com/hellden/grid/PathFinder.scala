@@ -1,6 +1,8 @@
 package com.hellden.grid
 
 import com.hellden.cache.ObjectIdentityKey
+import com.hellden.collection.Channel
+import com.hellden.collection.Channel.{Consumer, Producer}
 import com.hellden.grid.Direction.*
 import com.hellden.grid.Direction.Turn.*
 
@@ -16,7 +18,8 @@ object PathFinder:
   type Num = Long
 
   case class Solution(score: Num, trail: List[Position])
-  case class Path(position: Position, direction: Direction, trail: List[(Position, Direction)], score: Num)
+  case class Path(position: Position, direction: Direction, trail: List[(Position, Direction)], score: Num):
+    def toSolution: Solution = Solution(score, trail.map(_._1))
 
 class PathFinder[T](grid: BoundedGrid[T]):
   import PathFinder.*
@@ -33,7 +36,7 @@ class PathFinder[T](grid: BoundedGrid[T]):
 
   def key(path: Path): Any = path.position
 
-  def find(direction: Direction, start: Position, finish: Position): Iterable[Solution] =
+  def find(direction: Direction, start: Position, finish: Position): Consumer[Solution] =
     new PriorityQueue(direction, start, finish).find()
 
   def print(solution: Solution, value: T): Unit =
@@ -77,25 +80,25 @@ class PathFinder[T](grid: BoundedGrid[T]):
     private def dequeue(): Path =
       queue.dequeue()
 
-    def find(): Iterable[Solution] =
+    def find(): Consumer[Solution] =
       val finishScores = NESW.flatMap(d => bestPaths.get((finish, d))).map(_.score)
       val bestScore = if finishScores.isEmpty then Long.MaxValue else finishScores.min
-      val solutions = new LinkedTransferQueue[Path]
-      Future(find(bestScore, solutions)).onComplete: x =>
-        println(s"done: $x")
-        solutions.put(startPath.copy(trail = Nil))
-      LazyList.continually(solutions.take()).takeWhile(_.trail.nonEmpty).filter(_.trail.nonEmpty).map: solution =>
-        Solution(solution.score, solution.trail.map(_._1))
+      val solutions = new Channel[Solution]
+      Future(find(bestScore, solutions.producer))
+      solutions.consumer
 
     @tailrec
-    private def find(bestScore: Num, solutions: LinkedTransferQueue[Path]): Unit =
-      if queue.nonEmpty then
+    private def find(bestScore: Num, solutions: Producer[Solution]): Unit =
+      if queue.isEmpty then
+        solutions.done()
+      else
         dequeue() match
           case path if path.position == finish =>
-            if consider(path.score, bestScore) then solutions.put(path)
+            if consider(path.score, bestScore) then 
+              solutions.publish(path.toSolution)
             find(bestScore.min(path.score), solutions)
           case path if done(path.position) =>
-            solutions.put(path)
+            solutions.publish(path.toSolution)
             find(bestScore, solutions)
           case path@Path(position, direction, trail, score) =>
             enqueue(position, direction, trail, score + 1, bestScore)

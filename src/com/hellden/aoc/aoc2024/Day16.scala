@@ -19,7 +19,7 @@ object Day16 extends Day(16):
       override def cost(turn: Turn): Num = 1000
       override def key(path: Path): Any = (path.position, path.direction)
 
-    val sortedSolutions = pathFinder.find(E, start, finish).toSeq.sortBy(_.score)
+    val sortedSolutions = pathFinder.find(E, start, finish).iterable.toSeq.sortBy(_.score)
     sortedSolutions.takeWhile(_.score == sortedSolutions.head.score)
 
   override def part1: Num = // 105508
