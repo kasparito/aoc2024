@@ -9,8 +9,8 @@ class Channel[T] extends Channel.Producer[T] with Channel.Consumer[T]:
     case Done
     case Value(v: T)
 
-  private val queue = new LinkedTransferQueue[Item]
-  private val cancelled = new AtomicBoolean()
+  private val queue = LinkedTransferQueue[Item]
+  private val cancelled = AtomicBoolean()
 
   def producer: Channel.Producer[T] = this
   def consumer: Channel.Consumer[T] = this

@@ -6,7 +6,7 @@ object Day01 extends Day(1):
 
   private val numbers = inputLines.map:
     case Pattern(left, right) => (left.toLong, right.toLong)
-    case _ => throw new IllegalArgumentException
+    case _ => throw IllegalArgumentException()
 
   private val left = numbers.map(_._1)
   private val right = numbers.map(_._2)

@@ -22,7 +22,7 @@ object Day15 extends Day(15):
           case 'v' => Direction.S
           case '<' => Direction.W
           case '>' => Direction.E
-          case char => throw new IllegalArgumentException(s"Unknown direction: $char")
+          case char => throw IllegalArgumentException(s"Unknown direction: $char")
         .toSeq
     )
 
@@ -35,15 +35,17 @@ object Day15 extends Day(15):
           case '#' => String(Array.fill(width)('#'))
           case 'O' => String(Array('O') ++ Array.fill(width - 1)('.'))
           case '@' => String(Array('@') ++ Array.fill(width - 1)('.'))
-          case char => throw new IllegalArgumentException(s"Unknown map object: $char")
+          case char => throw IllegalArgumentException(s"Unknown map object: $char")
     )
 
     import map.Cell
 
-    private case class Box(positions: Set[Position]):
+    private object Box:
 
-      def this(position: Position) =
-        this((0 until width).map(offset => position.moveIn(E, offset)).toSet)
+      def apply(position: Position): Box =
+        Box((0 until width).map(offset => position.moveIn(E, offset)).toSet)
+    
+    private case class Box(positions: Set[Position]):
 
       def contains(position: Position): Boolean =
         positions.contains(position)
@@ -61,7 +63,7 @@ object Day15 extends Day(15):
 
     private val initialState: State = State(
       map.find('@').head,
-      map.find('O').map(cell => new Box(cell.position)).toSet
+      map.find('O').map(cell => Box(cell.position)).toSet
     )
 
     private def move(state: State, direction: Direction): State =
@@ -90,7 +92,7 @@ object Day15 extends Day(15):
       moves.foldLeft(initialState)(move).boxes.view.map(_.coordinates).sum
 
   override def part1: Num = // 1415498
-    new Warehouse(1).run
+    Warehouse(1).run
 
   override def part2: Num = // 1432898
-    new Warehouse(2).run
+    Warehouse(2).run

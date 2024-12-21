@@ -37,7 +37,7 @@ class PathFinder[T](grid: BoundedGrid[T]):
   def key(path: Path): Any = path.position
 
   def find(direction: Direction, start: Position, finish: Position): Consumer[Solution] =
-    new PriorityQueue(direction, start, finish).find()
+    PriorityQueue(direction, start, finish).find()
 
   def print(solution: Solution, value: T): Unit =
     println("\nSolution:\n=========")
@@ -58,7 +58,7 @@ class PathFinder[T](grid: BoundedGrid[T]):
     private val startPath: Path = Path(start, direction, List((start, direction)), 0)
     private val queue = mutable.PriorityQueue(startPath):
       val cache = TrieMap.empty[ObjectIdentityKey, Num]
-      Ordering.by(path => cache.getOrElseUpdate(new ObjectIdentityKey(path), heuristicScore(path)))
+      Ordering.by(path => cache.getOrElseUpdate(ObjectIdentityKey(path), heuristicScore(path)))
     private val bestPaths = mutable.Map(key(startPath) -> startPath)
 
     private def enqueue(
@@ -83,7 +83,7 @@ class PathFinder[T](grid: BoundedGrid[T]):
     def find(): Consumer[Solution] =
       val finishScores = NESW.flatMap(d => bestPaths.get((finish, d))).map(_.score)
       val bestScore = if finishScores.isEmpty then Long.MaxValue else finishScores.min
-      val solutions = new Channel[Solution]
+      val solutions = Channel[Solution]
       Future(find(bestScore, solutions.producer))
       solutions.consumer
 

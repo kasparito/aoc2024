@@ -66,7 +66,7 @@ object Day17 extends Day(17):
             case B => state.b
             case C => state.c
             case Literal(value) => value
-            case _ => throw new IllegalStateException
+            case _ => throw IllegalStateException()
 
         val nextPosition = position + 2
         program.slice(position, nextPosition).toList match
@@ -122,7 +122,7 @@ object Day17 extends Day(17):
               output
             )
           case ops =>
-            throw new IllegalStateException(ops.mkString(","))
+            throw IllegalStateException(ops.mkString(","))
 
       run(0, initialState, Vector.empty)
 

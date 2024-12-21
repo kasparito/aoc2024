@@ -20,4 +20,4 @@ object Position:
   def parse(s: String): Position =
     Try(s.split(",")).toOption match
       case Some(Array(x, y)) => Position(x.toInt, y.toInt)
-      case _ => throw new IllegalArgumentException(s)
+      case _ => throw IllegalArgumentException(s)
