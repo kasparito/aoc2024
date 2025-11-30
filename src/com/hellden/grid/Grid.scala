@@ -5,7 +5,15 @@ import com.hellden.grid.Direction.*
 import scala.collection.concurrent.TrieMap
 
 object Grid:
+
   def apply(lines: Seq[String]): BoundedGrid[Char] =
+    BoundedGrid(0 until lines.map(_.length).max, lines.indices): (x, y) =>
+      for
+        line <- lines.lift(y)
+        value <- line.lift(x)
+      yield value
+
+  def from[T](lines: Seq[Seq[T]]): BoundedGrid[T] =
     BoundedGrid(0 until lines.map(_.length).max, lines.indices): (x, y) =>
       for
         line <- lines.lift(y)

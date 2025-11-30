@@ -42,6 +42,10 @@ object Channel:
     def cancel(): Unit
     def iterable: Iterable[T]
     final def head: T = take(1).head
+    final def best(using ordering: Ordering[T]): Iterable[T] =
+      val values = iterable.toVector.sorted
+      cancel()
+      values.takeWhile(v => ordering.equiv(v, values.head))
     final def take(n: Int): Iterable[T] =
       val values = iterable.take(n).toVector
       cancel()
